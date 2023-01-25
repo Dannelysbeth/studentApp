@@ -16,9 +16,10 @@ import java.util.List;
 public class Student {
     @Id
     private String id;
+    @Indexed(unique = true)
+    private String username;
     private String firstName;
     private String lastName;
-
     @Indexed(unique = true)
     private String email;
     private Gender gender;
@@ -28,7 +29,8 @@ public class Student {
     private LocalDateTime created;
 
     @Builder
-    public Student(String firstName,
+    public Student(String username,
+                   String firstName,
                    String lastName,
                    String email,
                    Gender gender,
@@ -36,6 +38,7 @@ public class Student {
                    List<String> favSubjects,
                    BigDecimal totalSpentBooks,
                    LocalDateTime created) {
+        this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
