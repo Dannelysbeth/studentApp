@@ -21,8 +21,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Optional<Student> getStudentByEmail(String email) {
-        return null;
+    public Optional<Student> getStudentByUsername(String username) {
+        return studentRepository.getStudentsByUsername(username);
     }
 
     @Override

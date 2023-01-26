@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +22,11 @@ public class StudentController {
     @GetMapping("/all")
     List<Student> getAllStudents(@RequestParam Map<String, String> filters) {
         return studentService.getAllStudents();
+    }
+
+    @GetMapping("/{username}")
+    Optional<Student> getStudentByUsername(@RequestParam String username) {
+        return studentService.getStudentByUsername(username);
     }
 
 }

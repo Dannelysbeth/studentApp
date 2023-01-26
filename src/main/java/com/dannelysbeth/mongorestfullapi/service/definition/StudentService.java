@@ -11,7 +11,7 @@ public interface StudentService {
 
     Optional<Student> getStudentById(String id);
 
-    Optional<Student> getStudentByEmail(String email);
+    Optional<Student> getStudentByUsername(String username);
     List<Student> getAllStudents();
 
     Student saveStudent(Student student);
