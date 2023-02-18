@@ -1,6 +1,7 @@
 package com.dannelysbeth.mongorestfullapi.model;
 
 import com.dannelysbeth.mongorestfullapi.model.enums.Gender;
+import com.dannelysbeth.mongorestfullapi.model.enums.Role;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Document
@@ -21,10 +23,14 @@ public class User implements UserDetails {
     private String id;
     @Indexed(unique = true)
     private String username;
+    private String password;
+    private Set<Role> roles;
     private String firstName;
     private String lastName;
     @Indexed(unique = true)
     private String email;
+
+
     private Gender gender;
     private Address address;
     private List<String> favSubjects;
@@ -33,6 +39,8 @@ public class User implements UserDetails {
 
     @Builder
     public User(String username,
+                String password,
+                Set<Role> roles,
                 String firstName,
                 String lastName,
                 String email,
@@ -42,6 +50,8 @@ public class User implements UserDetails {
                 BigDecimal totalSpentBooks,
                 LocalDateTime created) {
         this.username = username;
+        this.password = password;
+        this.roles = roles;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -59,7 +69,7 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override

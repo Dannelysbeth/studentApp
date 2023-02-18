@@ -22,7 +22,7 @@ public class AppConfig {
         //lambda
         return username -> userRepository
                 .getUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(""));
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found exception"));
     }
     @Bean
     public AuthenticationProvider authenticationProvider(){

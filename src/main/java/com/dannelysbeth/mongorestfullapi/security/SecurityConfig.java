@@ -1,6 +1,5 @@
 package com.dannelysbeth.mongorestfullapi.security;
 
-import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,12 +19,12 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("")//todo
+                .requestMatchers("/api/auth/**")    //authentication methods
                 .permitAll()
                 .anyRequest()
                 .authenticated()

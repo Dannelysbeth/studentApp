@@ -5,8 +5,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
@@ -14,10 +16,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Service
+@RequiredArgsConstructor
 public class JwtService {
     @Value("${security.jwt.secret}")
-    private static String SECRET_KEY;
-    private Claims extractAllClaims(String token){
+    private String SECRET_KEY;
+
+    @Value("${security.jwt.expireTime}")
+    private int EXPIRE_TIME;
+
+    private Claims extractAllClaims(String token) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignKey())
@@ -31,7 +39,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
@@ -41,27 +49,28 @@ public class JwtService {
     }
 
     /**
-     *
      * @param extraClaims the extra claims to generate the token
      * @param userDetails the user
      * @return token
      */
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_TIME))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
-    public String generateToken( UserDetails userDetails){
+
+    public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
-    boolean isTokenValid(String token, UserDetails userDetails){
+
+    boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return(username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
