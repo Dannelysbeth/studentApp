@@ -1,10 +1,12 @@
 package com.dannelysbeth.mongorestfullapi.security.auth;
 
+import com.dannelysbeth.mongorestfullapi.exception.UsernameNotFoundException;
 import com.dannelysbeth.mongorestfullapi.model.User;
 import com.dannelysbeth.mongorestfullapi.repository.UserRepository;
 import com.dannelysbeth.mongorestfullapi.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,13 +40,13 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-//        authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        request.getUsername(),
-//                        request.getPassword()
-//                ));
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                ));
         var user = repository.getUserByUsername(request.getUsername())
-                .orElseThrow();                     //todo username not found Exception
+                .orElseThrow(UsernameNotFoundException::new);
 
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()

@@ -3,7 +3,6 @@ package com.dannelysbeth.mongorestfullapi.api;
 import com.dannelysbeth.mongorestfullapi.model.User;
 import com.dannelysbeth.mongorestfullapi.service.definition.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,8 +11,8 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/student")
-public class StudentController {
+@RequestMapping("api/user")
+public class UserController {
 
     private final UserService userService;
 
