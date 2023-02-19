@@ -5,12 +5,9 @@ import com.dannelysbeth.mongorestfullapi.repository.UserRepository;
 import com.dannelysbeth.mongorestfullapi.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Array;
-import java.util.List;
 import java.util.Set;
 
 import static com.dannelysbeth.mongorestfullapi.model.enums.Role.ROLE_USER;
@@ -22,6 +19,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
@@ -40,11 +38,11 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                ));
+//        authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        request.getUsername(),
+//                        request.getPassword()
+//                ));
         var user = repository.getUserByUsername(request.getUsername())
                 .orElseThrow();                     //todo username not found Exception
 
