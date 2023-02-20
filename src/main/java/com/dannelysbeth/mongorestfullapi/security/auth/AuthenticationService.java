@@ -1,5 +1,6 @@
 package com.dannelysbeth.mongorestfullapi.security.auth;
 
+import com.dannelysbeth.mongorestfullapi.exception.IncorrectPasswordException;
 import com.dannelysbeth.mongorestfullapi.exception.UsernameNotFoundException;
 import com.dannelysbeth.mongorestfullapi.model.User;
 import com.dannelysbeth.mongorestfullapi.repository.UserRepository;
@@ -40,13 +41,18 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                ));
+//        authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        request.getUsername(),
+//                        request.getPassword()
+//                ));
         var user = repository.getUserByUsername(request.getUsername())
                 .orElseThrow(UsernameNotFoundException::new);
+
+        boolean decoded = passwordEncoder.matches(user.getPassword(), request.getPassword());
+        if(!user.getPassword().equals(decoded)) {
+            throw new IncorrectPasswordException();
+        }
 
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
