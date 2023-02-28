@@ -50,7 +50,8 @@ public class AuthenticationService {
                 .orElseThrow(UsernameNotFoundException::new);
 
         boolean decoded = passwordEncoder.matches(user.getPassword(), request.getPassword());
-        if(!user.getPassword().equals(decoded)) {
+        String decodedPass = passwordEncoder.encode(request.getPassword());
+        if(!user.getPassword().equals(decodedPass)) {
             throw new IncorrectPasswordException();
         }
 
