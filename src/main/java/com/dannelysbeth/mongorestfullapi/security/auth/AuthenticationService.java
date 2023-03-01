@@ -49,9 +49,9 @@ public class AuthenticationService {
         var user = repository.getUserByUsername(request.getUsername())
                 .orElseThrow(UsernameNotFoundException::new);
 
-        boolean decoded = passwordEncoder.matches(user.getPassword(), request.getPassword());
+        boolean decoded = passwordEncoder.matches(request.getPassword(), user.getPassword());
         String decodedPass = passwordEncoder.encode(request.getPassword());
-        if(!user.getPassword().equals(decodedPass)) {
+        if(!decoded) {
             throw new IncorrectPasswordException();
         }
 
