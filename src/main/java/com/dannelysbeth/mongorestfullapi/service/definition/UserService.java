@@ -16,4 +16,6 @@ public interface UserService {
     User save(User user);
 
     void delete(String id);
+
+    boolean existsByEmail(String email);
 }
