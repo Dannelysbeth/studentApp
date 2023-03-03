@@ -1,4 +1,4 @@
-package com.dannelysbeth.mongorestfullapi.security.auth;
+package com.dannelysbeth.mongorestfullapi.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

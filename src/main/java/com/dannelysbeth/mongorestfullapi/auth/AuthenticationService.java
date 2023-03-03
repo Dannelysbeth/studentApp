@@ -1,4 +1,4 @@
-package com.dannelysbeth.mongorestfullapi.security.auth;
+package com.dannelysbeth.mongorestfullapi.auth;
 
 import com.dannelysbeth.mongorestfullapi.exception.EmailExistsException;
 import com.dannelysbeth.mongorestfullapi.exception.IncorrectPasswordException;
@@ -7,6 +7,7 @@ import com.dannelysbeth.mongorestfullapi.model.User;
 import com.dannelysbeth.mongorestfullapi.repository.UserRepository;
 import com.dannelysbeth.mongorestfullapi.security.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
         if (repository.existsByEmail(request.getEmail())) {

@@ -1,4 +1,4 @@
-package com.dannelysbeth.mongorestfullapi.security.auth;
+package com.dannelysbeth.mongorestfullapi.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterRequest {
-    private String firstName;
-    private String lastName;
+public class AuthenticationRequest {
     private String username;
-    private String email;
     private String password;
+
+
 }
