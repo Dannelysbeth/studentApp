@@ -17,7 +17,7 @@ public class UserController {
 
     private final UserService userService;
 
-//    @Secured("ROLE_USER")
+    @Secured("ROLE_USER")
     @GetMapping("/all")
     List<User> getAllStudents(@RequestParam Map<String, String> filters) {
         return userService.getAll();
