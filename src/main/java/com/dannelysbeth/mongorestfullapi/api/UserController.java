@@ -1,5 +1,6 @@
 package com.dannelysbeth.mongorestfullapi.api;
 
+import com.dannelysbeth.mongorestfullapi.exception.UsernameNotFoundException;
 import com.dannelysbeth.mongorestfullapi.model.User;
 import com.dannelysbeth.mongorestfullapi.service.definition.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     @GetMapping("/{username}")
     Optional<User> getStudentByUsername(@PathVariable String username) {
-        return userService.getByUsername(username);
+        return Optional.ofNullable(userService.getByUsername(username).orElseThrow(UsernameNotFoundException::new));
     }
 
 }
