@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-//@Transactional
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
