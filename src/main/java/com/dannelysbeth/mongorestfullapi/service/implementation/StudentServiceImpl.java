@@ -2,7 +2,6 @@ package com.dannelysbeth.mongorestfullapi.service.implementation;
 
 import com.dannelysbeth.mongorestfullapi.exception.UsernameNotFoundException;
 import com.dannelysbeth.mongorestfullapi.model.Student;
-import com.dannelysbeth.mongorestfullapi.model.User;
 import com.dannelysbeth.mongorestfullapi.repository.StudentRepository;
 import com.dannelysbeth.mongorestfullapi.service.definition.StudentService;
 import lombok.AllArgsConstructor;
@@ -30,7 +29,7 @@ public class StudentServiceImpl implements StudentService {
     public Student getByIdentificationNumber(String identificationNumber) {
 
         return studentRepository.getStudentByIdentificationNumber(identificationNumber)
-                        .orElseThrow(UsernameNotFoundException::new);
+                .orElseThrow(UsernameNotFoundException::new);
     }
 
     @Override
@@ -40,12 +39,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student save(Student student) {
-        return null;
+        return studentRepository.save(student);
     }
 
     @Override
     public void delete(String id) {
-         studentRepository.deleteById(id);
+        studentRepository.deleteById(id);
     }
 
     @Override
