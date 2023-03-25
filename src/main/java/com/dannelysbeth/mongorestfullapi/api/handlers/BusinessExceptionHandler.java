@@ -1,10 +1,7 @@
 package com.dannelysbeth.mongorestfullapi.api.handlers;
 
 import com.dannelysbeth.mongorestfullapi.api.handlers.DTO.ErrorResponse;
-import com.dannelysbeth.mongorestfullapi.exception.EmailExistsException;
-import com.dannelysbeth.mongorestfullapi.exception.IncorrectPasswordException;
-import com.dannelysbeth.mongorestfullapi.exception.StudentIdentificationNumberNotFoundException;
-import com.dannelysbeth.mongorestfullapi.exception.UsernameNotFoundException;
+import com.dannelysbeth.mongorestfullapi.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,20 +15,29 @@ public class BusinessExceptionHandler {
     public ErrorResponse emailExistsExceptionHandler(EmailExistsException exception) {
         return new ErrorResponse(exception);
     }
-    @ExceptionHandler(UsernameNotFoundException.class)
+
+
+    @ExceptionHandler(IncorrectPasswordException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorResponse usernameNotFoundExceptionHandler(UsernameNotFoundException exception) {
+    public ErrorResponse incorrectPasswordExceptionHandler(IncorrectPasswordException exception) {
         return new ErrorResponse(exception);
     }
+
+    @ExceptionHandler(JwtExpireException.class)
+    @ResponseStatus(value = HttpStatus.CHECKPOINT)
+    public ErrorResponse jwtExpireExceptionHandler(JwtExpireException exception) {
+        return new ErrorResponse(exception);
+    }
+
     @ExceptionHandler(StudentIdentificationNumberNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorResponse studentIdentificationNumberNotFoundExceptionHandler(StudentIdentificationNumberNotFoundException exception) {
         return new ErrorResponse(exception);
     }
 
-    @ExceptionHandler(IncorrectPasswordException.class)
+    @ExceptionHandler(UsernameNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorResponse incorrectPasswordExceptionHandler(IncorrectPasswordException exception) {
+    public ErrorResponse usernameNotFoundExceptionHandler(UsernameNotFoundException exception) {
         return new ErrorResponse(exception);
     }
 }
