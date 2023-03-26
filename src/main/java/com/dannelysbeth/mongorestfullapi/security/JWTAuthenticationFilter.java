@@ -1,11 +1,14 @@
 package com.dannelysbeth.mongorestfullapi.security;
 
+import com.dannelysbeth.mongorestfullapi.api.handlers.DTO.ErrorResponse;
 import com.dannelysbeth.mongorestfullapi.exception.JwtExpireException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +20,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @Component
 @RequiredArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
@@ -26,31 +31,41 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+                                    @NonNull FilterChain filterChain) throws IOException {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String username;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
         try {
-            jwt = authHeader.substring(7); // to exclude the "Bearer" keyword
-            username = jwtService.extractUsername(jwt);
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-                if (jwtService.isTokenValid(jwt, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities());
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                filterChain.doFilter(request, response);
+                return;
             }
-            filterChain.doFilter(request, response);
-        } catch(Exception exception) {
-            throw new JwtExpireException();
+            try {
+                jwt = authHeader.substring(7); // to exclude the "Bearer" keyword
+                username = jwtService.extractUsername(jwt);
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+                    if (jwtService.isTokenValid(jwt, userDetails)) {
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities());
+                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    }
+                }
+                filterChain.doFilter(request, response);
+            } catch (Exception exception) {
+                addErrorMessageToResponse(response, HttpStatus.FORBIDDEN.value(), "JWT expired");
+            }
+        } catch (Exception exception) {
+            addErrorMessageToResponse(response, HttpStatus.FORBIDDEN.value(), "JWT not valid");
         }
+
+    }
+    private void addErrorMessageToResponse(HttpServletResponse response, int errorCode, String errorMessage) throws IOException{
+        response.setStatus(HttpStatus.FORBIDDEN.value());
+        response.setContentType(APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getOutputStream(), new ErrorResponse(errorCode, errorMessage));
     }
 }

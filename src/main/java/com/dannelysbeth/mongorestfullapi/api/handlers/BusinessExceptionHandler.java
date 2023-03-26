@@ -24,7 +24,7 @@ public class BusinessExceptionHandler {
     }
 
     @ExceptionHandler(JwtExpireException.class)
-    @ResponseStatus(value = HttpStatus.CHECKPOINT)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public ErrorResponse jwtExpireExceptionHandler(JwtExpireException exception) {
         return new ErrorResponse(exception);
     }

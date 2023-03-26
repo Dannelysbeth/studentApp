@@ -4,6 +4,6 @@ import org.springframework.http.HttpStatus;
 
 public class JwtExpireException extends BusinessException{
     public JwtExpireException() {
-        super(HttpStatus.CHECKPOINT.value(),  "Jwt expired!");
+        super(HttpStatus.FORBIDDEN.value(),  "Jwt expired!");
     }
 }
