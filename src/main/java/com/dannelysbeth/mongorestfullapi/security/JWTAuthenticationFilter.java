@@ -1,7 +1,6 @@
 package com.dannelysbeth.mongorestfullapi.security;
 
 import com.dannelysbeth.mongorestfullapi.api.handlers.DTO.ErrorResponse;
-import com.dannelysbeth.mongorestfullapi.exception.JwtExpireException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,17 +30,23 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws IOException {
+                                    @NonNull FilterChain filterChain) throws IOException, ServletException {
+
+
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String username;
-        try {
+
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 filterChain.doFilter(request, response);
+//                addErrorMessageToResponse(response, HttpStatus.FORBIDDEN.value(), "JWT not valid");
+//                new BusinessException(HttpStatus.NO_CONTENT.value(), "Auth missing");
                 return;
             }
+
+        try {
+            jwt = authHeader.substring(7); // to exclude the "Bearer" keyword
             try {
-                jwt = authHeader.substring(7); // to exclude the "Bearer" keyword
                 username = jwtService.extractUsername(jwt);
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
@@ -55,15 +60,18 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                     }
                 }
                 filterChain.doFilter(request, response);
+
+
             } catch (Exception exception) {
                 addErrorMessageToResponse(response, HttpStatus.FORBIDDEN.value(), "JWT expired");
             }
         } catch (Exception exception) {
-            addErrorMessageToResponse(response, HttpStatus.FORBIDDEN.value(), "JWT not valid");
+            addErrorMessageToResponse(response, HttpStatus.NOT_ACCEPTABLE.value(), "Authorization Header not provided!");
         }
 
     }
-    private void addErrorMessageToResponse(HttpServletResponse response, int errorCode, String errorMessage) throws IOException{
+
+    private void addErrorMessageToResponse(HttpServletResponse response, int errorCode, String errorMessage) throws IOException {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), new ErrorResponse(errorCode, errorMessage));
