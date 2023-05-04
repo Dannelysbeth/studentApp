@@ -11,6 +11,7 @@ public interface UserService {
     Optional<User> getById(String id);
 
     Optional<User> getByUsername(String username);
+
     List<User> getAll();
 
     User save(User user);

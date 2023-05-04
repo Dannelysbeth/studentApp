@@ -37,12 +37,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String username;
 
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                filterChain.doFilter(request, response);
-//                addErrorMessageToResponse(response, HttpStatus.FORBIDDEN.value(), "JWT not valid");
-//                new BusinessException(HttpStatus.NO_CONTENT.value(), "Auth missing");
-                return;
-            }
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         try {
             jwt = authHeader.substring(7); // to exclude the "Bearer" keyword

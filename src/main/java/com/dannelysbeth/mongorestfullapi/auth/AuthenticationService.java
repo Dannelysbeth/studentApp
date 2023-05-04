@@ -45,6 +45,7 @@ public class AuthenticationService {
                 .token(jwtToken)
                 .build();
     }
+
     public AuthenticationResponse registerStudent(StudentRegisterRequest request) {
         if (repository.existsByEmail(request.getEmail())) {
             throw new EmailExistsException();
@@ -76,7 +77,7 @@ public class AuthenticationService {
                 .orElseThrow(UsernameNotFoundException::new);
 
         boolean decoded = passwordEncoder.matches(request.getPassword(), user.getPassword());
-        if(!decoded) {
+        if (!decoded) {
             throw new IncorrectPasswordException();
         }
 

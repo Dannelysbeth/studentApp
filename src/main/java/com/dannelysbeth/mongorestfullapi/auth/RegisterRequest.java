@@ -1,6 +1,5 @@
 package com.dannelysbeth.mongorestfullapi.auth;
 
-import com.dannelysbeth.mongorestfullapi.model.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

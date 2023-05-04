@@ -1,6 +1,5 @@
 package com.dannelysbeth.mongorestfullapi.api;
 
-import com.dannelysbeth.mongorestfullapi.exception.UsernameNotFoundException;
 import com.dannelysbeth.mongorestfullapi.model.Student;
 import com.dannelysbeth.mongorestfullapi.service.definition.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +30,6 @@ public class StudentController {
         return Optional.ofNullable(
                 studentService
                         .getByIdentificationNumber(identificationNumber)
-                        );
+        );
     }
 }
