@@ -27,6 +27,7 @@ public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
+
     public AuthenticationResponse register(RegisterRequest request) {
         if (repository.existsByEmail(request.getEmail())) {
             throw new EmailExistsException();
@@ -47,18 +48,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse registerStudent(StudentRegisterRequest request) {
-        if (repository.existsByEmail(request.getEmail())) {
-            throw new EmailExistsException();
-        }
-        var user = User.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .email(request.getEmail())
-                .roles(Set.of(ROLE_USER))
-                .build();
-        repository.save(user);
+        AuthenticationResponse response = this.register(request);
         var student = Student.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -66,10 +56,7 @@ public class AuthenticationService {
 //                .gender(request.getGender())
                 .build();
         studentRepository.save(student);
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        return response;
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {

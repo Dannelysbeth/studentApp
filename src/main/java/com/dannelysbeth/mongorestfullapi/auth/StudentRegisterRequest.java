@@ -1,16 +1,14 @@
 package com.dannelysbeth.mongorestfullapi.auth;
 
 import com.dannelysbeth.mongorestfullapi.model.enums.Gender;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentRegisterRequest {
+public class StudentRegisterRequest extends RegisterRequest{
     private String firstName;
     private String lastName;
     private String username;
