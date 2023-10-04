@@ -12,5 +12,7 @@ public interface UserRepository
 
     boolean existsByEmail(String email);
 
+    Optional<User> getUserByEmail(String email);
+
     Optional<User> getUserByUsername(String username);
 }

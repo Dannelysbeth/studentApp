@@ -22,7 +22,6 @@ public class JwtService {
     @Value("${security.jwt.secret}")
     private String SECRET_KEY;
 
-    //
     @Value("${security.jwt.expireTime}")
     private int EXPIRE_TIME;
 

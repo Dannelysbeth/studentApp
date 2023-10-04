@@ -48,12 +48,12 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse registerStudent(StudentRegisterRequest request) {
-        AuthenticationResponse response = this.register(request);
+        AuthenticationResponse response = this.register(request.getRegisterRequest());
         var student = Student.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .identificationNumber(request.getStudentNumber())
-//                .gender(request.getGender())
+                .gender(request.getGender())
                 .build();
         studentRepository.save(student);
         return response;
@@ -61,7 +61,8 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var user = repository.getUserByUsername(request.getUsername())
-                .orElseThrow(UsernameNotFoundException::new);
+                .orElseGet( () -> repository.getUserByEmail(request.getUsername())
+                        .orElseThrow(UsernameNotFoundException::new));
 
         boolean decoded = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if (!decoded) {
