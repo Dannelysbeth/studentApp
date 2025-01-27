@@ -1,2 +1,2 @@
 # studentApp
-Simple REST API app for storing student informations using database MongoDB
+Simple REST API app for storing student information using database MongoDB
