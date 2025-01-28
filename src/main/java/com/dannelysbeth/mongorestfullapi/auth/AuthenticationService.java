@@ -61,7 +61,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var user = repository.getUserByUsername(request.getUsername())
-                .orElseGet( () -> repository.getUserByEmail(request.getUsername())
+                .orElseGet(() -> repository.getUserByEmail(request.getUsername())
                         .orElseThrow(UsernameNotFoundException::new));
 
         boolean decoded = passwordEncoder.matches(request.getPassword(), user.getPassword());

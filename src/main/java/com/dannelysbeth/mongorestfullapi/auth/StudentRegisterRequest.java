@@ -1,7 +1,10 @@
 package com.dannelysbeth.mongorestfullapi.auth;
 
 import com.dannelysbeth.mongorestfullapi.model.enums.Gender;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Data
@@ -17,7 +20,7 @@ public class StudentRegisterRequest {
     private String studentNumber;
     private Gender gender;
 
-    public RegisterRequest getRegisterRequest(){
+    public RegisterRequest getRegisterRequest() {
         return RegisterRequest.builder()
                 .firstName(firstName)
                 .lastName(lastName)
