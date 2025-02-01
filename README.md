@@ -17,3 +17,5 @@ A RESTful API built with Spring Boot and MongoDB, designed to manage student dat
 - **Spring Security**: Authentication and authorization.
 - **Lombok**: Simplifying boilerplate code.
 - **Maven/Gradle**: Build tool (assumed, not shown in code).
+
+## 
